@@ -1,0 +1,44 @@
+---
+title: "casestudy_4"
+author: "Uday Allu"
+date: "6 March 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Reading the Case study 4 Dataset
+```{r}
+data4=read.csv(file.choose())
+```
+Structure of the data   
+```{r}
+str(data4)
+```
+Summary of the Data
+```{r}
+summary(data4)
+```
+Checking the 
+```{r}
+sum(is.na(data4$Syndicate.Global.Classic.Credit.Card))
+sum(is.na(data4$Syndicate.Global.Gold.Credit.Card))
+```
+
+```{r}
+boxplot(data4$Syndicate.Global.Classic.Credit.Card,data4$Syndicate.Global.Gold.Credit.Card)
+```
+```{r}
+hist(data4$Syndicate.Global.Classic.Credit.Card)
+hist(data4$Syndicate.Global.Gold.Credit.Card)
+```
+
+```{r}
+x=data4$Syndicate.Global.Classic.Credit.Card
+y=data4$Syndicate.Global.Gold.Credit.Card
+wilcox.test(x,y,paired = TRUE)
+mean(x)
+mean(y)
+```
+

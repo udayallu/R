@@ -1,0 +1,115 @@
+---
+title: "casestudy2.1"
+author: "Uday Allu"
+date: "6 March 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#
+```{r}
+library(datasets)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+```
+
+#Read the data
+```{r}
+Accountopendata<-read.csv(file.choose())
+```
+#Structure of Data
+
+```{r}
+str(Accountopendata)
+```
+
+
+
+#Summary of Data
+```{r}
+summary(Accountopendata)
+```
+
+
+
+#Calculate na values in % 
+
+```{r}
+colMeans(is.na(Accountopendata))
+```
+
+
+#Removing NA values
+```{r}
+Accountopendata<-na.omit(Accountopendata)
+```
+
+
+#Using Plot we can get the relation between the variables.
+```{r}
+plot(Accountopendata)
+```
+
+#Checking the Outlayers
+```{r}
+boxplot(Accountopendata$Age)
+boxplot(Accountopendata$Days.for.decision.after.application)
+boxplot(Accountopendata$Days.for.decision.after.lead)
+```
+
+#Sampling the data based on Account open Flag
+```{r}
+Account_flag_1<-Accountopendata%>%filter(Account_open_flag==1)
+Account_flag_0<-Accountopendata%>%filter(Account_open_flag==0)
+```
+
+#Test data for whether data is normalization or not for Account_flag_1
+```{r}
+shapiro.test(Account_flag_1$Days.for.decision.after.application)
+shapiro.test(Account_flag_1$Days.for.decision.after.lead)
+```
+# Z-value for Application and lead columns for Account_flag_1
+```{r}
+Account_flag_1$a_aft_app=scale(Account_flag_1$Days.for.decision.after.application)
+Account_flag_1$a_aft_lead=scale(Account_flag_1$Days.for.decision.after.lead)
+Account_flag_1
+```
+
+#Test data for whether data is normalization or not for Account_flag_0
+```{r}
+shapiro.test(Account_flag_0$Days.for.decision.after.application)
+shapiro.test(Account_flag_0$Days.for.decision.after.lead)
+
+```
+
+# Z-value for Application and lead columns for Account_flag_0
+```{r}
+Account_flag_0$a_aft_app=scale(Account_flag_0$Days.for.decision.after.application)
+Account_flag_0$a_aft_lead=scale(Account_flag_0$Days.for.decision.after.lead)
+Account_flag_0
+```
+
+#Remove outlayers from data where z value > 3
+```{r}
+Account_flag_1$a_aft_app<-as.numeric(Account_flag_1$a_aft_app)
+Account_flag_1$a_aft_lead<-as.numeric(Account_flag_1$a_aft_lead)
+Account_flag_1<-Account_flag_1%>%filter(Account_flag_1$a_aft_app<=3)
+Account_flag_0$a_aft_app<-as.numeric(Account_flag_0$a_aft_app)
+Account_flag_0$a_aft_lead<-as.numeric(Account_flag_0$a_aft_lead)
+Account_flag_0<-Account_flag_0%>%filter(Account_flag_0$a_aft_app<=3)
+```
+
+
+```{r}
+shapiro.test(Account_flag_1$a_aft_app)
+```
+
+```{r}
+shapiro.test(Account_flag_0$a_aft_app)
+```
+
+

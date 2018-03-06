@@ -1,0 +1,73 @@
+---
+title: "CaseStudy2"
+author: "Uday Allu"
+date: "6 March 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+Reading the CSV of the case study 2 dataset
+```{r}
+data=read.csv(file.choose())
+```
+
+Structure of the Data
+```{r}
+str(data)
+```
+
+Summary
+
+```{r}
+summary(data)
+```
+Checking for the Missing Values 
+```{r}
+a=sum(is.na(data))
+a
+```
+
+Checking the outliers 
+
+```{r}
+boxplot(data$loan_amnt,data$funded_amnt,data$Tenure_months)
+```
+
+```{r}
+d <- density(data$funded_amnt)
+plot(d, main="Kernel Density of Funded amount")
+polygon(d, col="blue", border="red")
+```
+
+```{r}
+hist(data$loan_amnt,col="cyan", main="Distribution of the Loan Amount")
+```
+
+```{r}
+e <- density(data$Tenure_months)
+plot(e, main="Kernel Density of Funded amount")
+polygon(e, col="blue", border="red")
+```
+Checking the Normal Distribution using Shapiro-wilk normality test
+```{r}
+w=sample(data$loan_amnt,size = 5000,replace = F)
+shapiro.test(w)
+
+qqnorm(w);qqline(w,col=2)
+```
+
+% of fundede amount on loan amount 
+```{r}
+hist(data$loan_amnt,col="cyan", main="Distribution of the Loan Amount")
+polygon(d, col="blue", border="red")
+```
+#calculate percentage of loan amount not given based on Tenure months.
+```{r}
+percentamt<-data%>%group_by(Tenure_months)%>%summarise(percentage=((sum(as.numeric(loan_amnt))-sum(as.numeric( funded_amnt)))/sum(as.numeric(loan_amnt)))*100)
+percentamt
+```
+

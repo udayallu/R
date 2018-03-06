@@ -1,0 +1,66 @@
+---
+title: "casestudy"
+author: "Uday Allu"
+date: "5 March 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+Reading the CSV file
+```{r}
+bank=read.csv("C:/Users/Administrator/Downloads/Casestudy_1_bank-data/Casestudy_1_bank-data.csv")
+```
+Structure of the Dataset
+```{r}
+str(bank)
+```
+
+Summary
+```{r}
+summary(bank)
+```
+Analysis of Personal loans based on Gender and Married = Yes
+```{r}
+bank3= bank  %>% filter(bank$pl=="YES",married=="YES") %>% group_by(Gender) %>% summarise(gcount=n())
+nam=c("Female","Male")
+nam = paste(nam, bank3$gcount)
+barplot(bank3$gcount,col="blue", names.arg=nam, main=" Gender Analysis with respect to pl")
+```
+Region wise Personal loan analysis 
+```{r}
+bank2 =bank %>% filter(pl=="YES",married=="YES")  %>% group_by(region) %>% summarise(Num=n())
+pct <- round(bank2$Num/sum(bank2$Num)*100)
+lbls <- paste(bank2$region, pct)
+lbls1 <- paste(lbls,"%",sep="")
+pie(bank2$Num,labels=lbls1, main= "Analysis based on the Region",col=rainbow(length(lbls)))
+```
+Percent of Current accounts who took Personal Loan
+```{r}
+bank4 = bank %>% filter(bank$pl=="YES") %>% group_by(current_act)  %>% summarise(Cur_count=n())
+pct <- round(bank4$Cur_count/sum(bank4$Cur_count)*100)
+nam1=c("NO","YES")
+nam1 = paste(nam1, pct)
+nam1 <- paste(nam1,"%",sep="")
+barplot(bank4$Cur_count,names.arg=nam1, main = "% of current Account holders took pl",xlab="Current Account")
+```
+Count of Saving accounts who took Personal Loan
+Percent of Current accounts who took Personal Loan
+```{r}
+bank5 = bank %>% filter(bank$pl=="YES") %>% group_by(save_act)  %>% summarise(Cur_count=n())
+pct <- round(bank5$Cur_count/sum(bank5$Cur_count)*100)
+nam1=c("NO","YES")
+nam1 = paste(nam1, pct)
+nam1 <- paste(nam1,"%",sep="")
+barplot(bank5$Cur_count,names.arg=nam1, xlab="Savings Account ",main = "% of Saving Account holders took pl")
+```
+Min and max of Income of Account Holder who took Pl
+```{r}
+bank$incomegroup=cut(bank$income,breaks = c(5000,10000,15000,20000,25000,30000,35000,40000,45000,55000,60000,65000))
+
+bank6 = bank  %>% group_by(bank$incomegroup) %>% summarise(Inc_count=n())
+barplot(bank6$Inc_count,names.arg = c(5000,10000,15000,20000,25000,30000,35000,40000,45000,55000,60000),col="cyan", xlab= "Income Group",main="Min and Max Income group who took pl")
+```
+
